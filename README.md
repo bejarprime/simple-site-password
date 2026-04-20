@@ -1,74 +1,142 @@
 # Simple Site Password
 
-Simple Site Password is a small WordPress plugin that protects an entire site with one global password.
+Plugin WordPress para proteger un sitio completo con una contraseña global.
 
-It is useful for development sites, private client previews, pre-launch pages and temporary private websites.
+Este plugin forma parte de una serie de proyectos open source orientados a portfolio, donde documento el proceso completo de creación de plugins WordPress: idea, alcance, arquitectura, seguridad, UX, validación y publicación.
 
-## Features
+## Problema que resuelve
 
-- Global password protection for visitors.
-- Password stored as a hash, never in plain text.
-- Signed access cookie with configurable duration.
-- Optional administrator bypass.
-- Does not block WordPress login, admin, AJAX, REST API, cron or WP-CLI.
-- Three password screen templates:
-  - Minimal
-  - Dark
-  - Gradient
-- Custom title, description and button text.
-- Live preview in the settings screen.
-- Spanish translation included.
-- Optional settings cleanup on uninstall.
+Hay situaciones donde no necesitas un sistema de membresías completo, pero sí quieres ocultar temporalmente una web:
 
-## What it is not
+- sitio en desarrollo,
+- demo privada para cliente,
+- landing antes de lanzamiento,
+- catálogo temporalmente privado,
+- sitio interno sencillo,
+- proyecto que aún no debe ser visible públicamente.
 
-This plugin is not a replacement for:
+**Simple Site Password** añade una pantalla de contraseña antes de permitir el acceso al sitio público.
 
-- membership systems,
+## Características
+
+- Protección global por contraseña para visitantes.
+- Contraseña guardada como hash, nunca en texto plano.
+- Cookie de acceso firmada con duración configurable.
+- Bypass opcional para administradores.
+- No bloquea rutas críticas de WordPress:
+  - `wp-login.php`,
+  - `wp-admin`,
+  - AJAX,
+  - REST API,
+  - WP Cron,
+  - WP-CLI.
+- Tres templates para la pantalla de acceso:
+  - Minimal,
+  - Dark,
+  - Gradient.
+- Personalización de título, descripción y texto del botón.
+- Preview en tiempo real dentro del panel de ajustes.
+- Interfaz traducida a español.
+- Limpieza opcional de ajustes al desinstalar.
+
+## Qué no es
+
+Este plugin no pretende sustituir:
+
+- sistemas de membresía,
 - firewalls,
-- role-based access control,
-- enterprise authentication,
-- advanced protection for highly sensitive data.
+- control de acceso por roles,
+- autenticación empresarial,
+- medidas avanzadas para información altamente sensible.
 
-It is intended for simple password-based access restriction.
+Está pensado para una protección simple por contraseña en escenarios de bajo riesgo o acceso temporal.
 
-## Installation
+## Instalación
 
-1. Upload the plugin folder to `/wp-content/plugins/`.
-2. Activate it from the WordPress Plugins screen.
-3. Go to `Settings > Simple Site Password`.
-4. Set a password.
-5. Enable global protection.
-6. Save settings.
+1. Copia la carpeta del plugin en:
 
-## Security decisions
+   ```text
+   /wp-content/plugins/
+   ```
 
-### Password storage
+2. Activa el plugin desde el panel de WordPress.
+3. Ve a:
 
-The password is stored with WordPress password hashing functions. The original password cannot be recovered or shown after saving.
+   ```text
+   Ajustes → Simple Site Password
+   ```
 
-### Access cookie
+4. Configura una contraseña.
+5. Activa la protección global.
+6. Guarda los ajustes.
 
-Visitor access is remembered using a signed cookie. If the password changes, previous cookies are invalidated.
+## Decisiones técnicas
 
-### WordPress routes
+### Contraseña hasheada
 
-The plugin avoids blocking critical WordPress routes:
+La contraseña no se guarda en texto plano. Se almacena usando funciones de hashing de WordPress.
 
-- `wp-login.php`
-- `wp-admin`
-- AJAX
-- REST API
-- WP Cron
-- WP-CLI
+Esto significa que la contraseña actual no puede revelarse después de guardarla. Solo puede reemplazarse por una nueva.
 
-## Development notes
+### Cookie firmada
 
-This plugin is part of a public portfolio series focused on building small, maintainable WordPress plugins with good practices.
+Cuando un visitante introduce la contraseña correcta, el acceso se recuerda mediante una cookie firmada.
 
-The repository contains only the public plugin files. Internal planning and LinkedIn content are kept outside the public repository.
+Si la contraseña cambia, las cookies anteriores quedan invalidadas.
 
-## License
+### Rutas críticas excluidas
+
+El plugin evita bloquear rutas necesarias para que WordPress siga funcionando:
+
+- login,
+- administración,
+- AJAX,
+- REST API,
+- cron,
+- WP-CLI.
+
+### Diseño aislado
+
+La pantalla de contraseña usa clases CSS prefijadas para evitar conflictos con temas o plugins.
+
+## Estructura del plugin
+
+```text
+simple-site-password/
+├─ assets/
+│  ├─ css/
+│  └─ js/
+├─ includes/
+├─ languages/
+├─ LICENSE
+├─ README.md
+├─ readme.txt
+├─ simple-site-password.php
+└─ uninstall.php
+```
+
+## Documentación WordPress.org
+
+El archivo `readme.txt` se mantiene en inglés porque está pensado para compatibilidad con el repositorio oficial de WordPress.org.
+
+Este `README.md` está en español porque el proyecto también sirve como portfolio para LinkedIn y empresas de habla hispana.
+
+## Estado del proyecto
+
+Versión actual:
+
+```text
+0.1.4
+```
+
+Pendiente antes de una versión 1.0:
+
+- validación final completa,
+- capturas,
+- posible release/tag,
+- post final de LinkedIn.
+
+## Licencia
 
 GPLv2 or later.
 
