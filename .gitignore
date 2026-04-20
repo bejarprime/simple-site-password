@@ -39,3 +39,9 @@ tmp/
 temp/
 *.tmp
 
+# Internal project planning / LinkedIn content
+/SPEC.md
+/CHECKLIST.md
+/PLAN_DESARROLLO.md
+/README_PROYECTO.md
+/contenido-linkedin/
