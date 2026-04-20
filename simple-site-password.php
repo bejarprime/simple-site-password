@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Simple Site Password
- * Plugin URI: https://example.com/simple-site-password
- * Description: Protege un sitio WordPress con una contraseña global sencilla para visitantes.
+ * Plugin URI: https://github.com/bejarprime/simple-site-password
+ * Description: Protect your WordPress site with a simple global password for visitors.
  * Version: 0.1.5
  * Requires at least: 6.0
  * Requires PHP: 7.4
