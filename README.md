@@ -39,6 +39,28 @@ Hay situaciones donde no necesitas un sistema de membresías completo, pero sí 
 - Interfaz traducida a español.
 - Limpieza opcional de ajustes al desinstalar.
 
+## Capturas
+
+### Panel de ajustes
+
+![Panel de ajustes](screenshots/01-admin-settings.jpg)
+
+### Template Minimal
+
+![Template Minimal](screenshots/02-template-minimal.jpg)
+
+### Template Dark
+
+![Template Dark](screenshots/03-template-dark.jpg)
+
+### Template Gradient
+
+![Template Gradient](screenshots/04-template-gradient.jpg)
+
+### Vista móvil
+
+![Vista móvil](screenshots/05-mobile-view.jpg)
+
 ## Qué no es
 
 Este plugin no pretende sustituir:
@@ -139,4 +161,3 @@ Pendiente antes de una versión 1.0:
 ## Licencia
 
 GPLv2 or later.
-
