@@ -9,5 +9,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-delete_option( 'simple_site_password_options' );
+$options = get_option( 'simple_site_password_options', array() );
 
+if ( is_array( $options ) && ! empty( $options['delete_on_uninstall'] ) ) {
+	delete_option( 'simple_site_password_options' );
+}
