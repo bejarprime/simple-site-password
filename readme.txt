@@ -4,7 +4,7 @@ Tags: password, private site, privacy, access, maintenance
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 0.1.4
+Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,10 @@ Yes. The plugin includes Spanish translation files.
 
 == Changelog ==
 
+= 0.1.5 =
+* Add password strength feedback in the admin screen.
+* Add basic frontend rate limiting for failed password attempts.
+
 = 0.1.4 =
 * Add Spanish translation files and localized admin script strings.
 
@@ -118,4 +122,3 @@ Yes. The plugin includes Spanish translation files.
 
 = 0.1.0 =
 * Initial scaffold.
-

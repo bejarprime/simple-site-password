@@ -95,6 +95,10 @@ class Simple_Site_Password_Admin {
 			array(
 				'show'               => __( 'Show', 'simple-site-password' ),
 				'hide'               => __( 'Hide', 'simple-site-password' ),
+				'passwordWeak'       => __( 'Weak password', 'simple-site-password' ),
+				'passwordMedium'     => __( 'Medium password', 'simple-site-password' ),
+				'passwordStrong'     => __( 'Strong password', 'simple-site-password' ),
+				'passwordHelp'       => __( 'Use at least 8 characters with a mix of letters, numbers, and symbols.', 'simple-site-password' ),
 				'defaultTitle'       => __( 'Protected Site', 'simple-site-password' ),
 				'defaultDescription' => __( 'Enter the password to access this site.', 'simple-site-password' ),
 				'defaultButton'      => __( 'Access', 'simple-site-password' ),
@@ -224,6 +228,12 @@ class Simple_Site_Password_Admin {
 												<?php echo esc_html__( 'Show', 'simple-site-password' ); ?>
 											</button>
 										</div>
+										<div class="ssp-password-strength ssp-strength-empty" data-ssp-password-strength aria-live="polite">
+											<span class="ssp-password-strength-track">
+												<span class="ssp-password-strength-bar" data-ssp-password-strength-bar></span>
+											</span>
+											<strong data-ssp-password-strength-label><?php echo esc_html__( 'Use at least 8 characters with a mix of letters, numbers, and symbols.', 'simple-site-password' ); ?></strong>
+										</div>
 									</div>
 
 									<div class="wphubb-field-description">
@@ -320,7 +330,7 @@ class Simple_Site_Password_Admin {
 	private function save_settings() {
 		$current = $this->options->get();
 
-		$new_password = isset( $_POST['password'] ) ? sanitize_text_field( wp_unslash( $_POST['password'] ) ) : '';
+		$new_password = isset( $_POST['password'] ) ? trim( (string) wp_unslash( $_POST['password'] ) ) : '';
 
 		$options = array(
 			'enabled'             => ! empty( $_POST['enabled'] ),
@@ -335,6 +345,13 @@ class Simple_Site_Password_Admin {
 		);
 
 		if ( '' !== $new_password ) {
+			if ( 'weak' === $this->calculate_password_strength( $new_password ) ) {
+				return array(
+					'saved' => false,
+					'error' => __( 'Please use a medium or strong password with at least 8 characters.', 'simple-site-password' ),
+				);
+			}
+
 			$options['password_hash'] = wp_hash_password( $new_password );
 		}
 
@@ -344,5 +361,53 @@ class Simple_Site_Password_Admin {
 			'saved' => true,
 			'error' => '',
 		);
+	}
+
+	/**
+	 * Calculate a simple password strength level.
+	 *
+	 * @param string $password Plain password submitted by the administrator.
+	 * @return string weak|medium|strong
+	 */
+	private function calculate_password_strength( $password ) {
+		if ( strlen( $password ) < 8 ) {
+			return 'weak';
+		}
+
+		$score = 0;
+
+		if ( strlen( $password ) >= 8 ) {
+			$score++;
+		}
+
+		if ( strlen( $password ) >= 12 ) {
+			$score++;
+		}
+
+		if ( preg_match( '/[a-z]/', $password ) ) {
+			$score++;
+		}
+
+		if ( preg_match( '/[A-Z]/', $password ) ) {
+			$score++;
+		}
+
+		if ( preg_match( '/[0-9]/', $password ) ) {
+			$score++;
+		}
+
+		if ( preg_match( '/[^a-zA-Z0-9]/', $password ) ) {
+			$score++;
+		}
+
+		if ( $score >= 5 ) {
+			return 'strong';
+		}
+
+		if ( $score >= 3 ) {
+			return 'medium';
+		}
+
+		return 'weak';
 	}
 }

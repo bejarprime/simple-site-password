@@ -30,6 +30,16 @@ class Simple_Site_Password_Gate {
 	const LOGOUT_QUERY_ARG = 'simple_site_password_logout';
 
 	/**
+	 * Maximum failed attempts before temporary lockout.
+	 */
+	const MAX_FAILED_ATTEMPTS = 5;
+
+	/**
+	 * Lockout duration in seconds.
+	 */
+	const LOCKOUT_SECONDS = 600;
+
+	/**
 	 * Request error flag.
 	 *
 	 * @var string
@@ -199,17 +209,71 @@ class Simple_Site_Password_Gate {
 			return;
 		}
 
-		$password = isset( $_POST['simple_site_password'] ) ? sanitize_text_field( wp_unslash( $_POST['simple_site_password'] ) ) : '';
-
-		if ( '' === $password || empty( $options['password_hash'] ) || ! wp_check_password( $password, $options['password_hash'] ) ) {
-			$this->error = __( 'Incorrect password. Please try again.', 'simple-site-password' );
+		if ( $this->is_rate_limited() ) {
+			$this->error = __( 'Too many failed attempts. Please try again in a few minutes.', 'simple-site-password' );
 			return;
 		}
 
+		$password = isset( $_POST['simple_site_password'] ) ? trim( (string) wp_unslash( $_POST['simple_site_password'] ) ) : '';
+
+		if ( '' === $password || empty( $options['password_hash'] ) || ! wp_check_password( $password, $options['password_hash'] ) ) {
+			$failed_attempts = $this->record_failed_attempt();
+			$this->error     = $failed_attempts >= self::MAX_FAILED_ATTEMPTS
+				? __( 'Too many failed attempts. Please try again in a few minutes.', 'simple-site-password' )
+				: __( 'Incorrect password. Please try again.', 'simple-site-password' );
+			return;
+		}
+
+		$this->clear_failed_attempts();
 		$this->set_access_cookie( $options );
 
 		wp_safe_redirect( $this->get_current_url() );
 		exit;
+	}
+
+	/**
+	 * Determine if the current visitor is temporarily rate limited.
+	 *
+	 * @return bool
+	 */
+	private function is_rate_limited() {
+		return (int) get_transient( $this->get_rate_limit_key() ) >= self::MAX_FAILED_ATTEMPTS;
+	}
+
+	/**
+	 * Record a failed unlock attempt for the current visitor.
+	 *
+	 * @return int Current failed attempt count.
+	 */
+	private function record_failed_attempt() {
+		$key   = $this->get_rate_limit_key();
+		$count = (int) get_transient( $key );
+		$count++;
+
+		set_transient( $key, $count, self::LOCKOUT_SECONDS );
+
+		return $count;
+	}
+
+	/**
+	 * Clear failed unlock attempts for the current visitor.
+	 *
+	 * @return void
+	 */
+	private function clear_failed_attempts() {
+		delete_transient( $this->get_rate_limit_key() );
+	}
+
+	/**
+	 * Build a privacy-friendly transient key for rate limiting.
+	 *
+	 * @return string
+	 */
+	private function get_rate_limit_key() {
+		$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+		$hash       = hash_hmac( 'sha256', $ip_address, wp_salt( 'nonce' ) );
+
+		return 'ssp_failed_attempts_' . $hash;
 	}
 
 	/**

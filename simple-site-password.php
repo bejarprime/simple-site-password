@@ -3,7 +3,7 @@
  * Plugin Name: Simple Site Password
  * Plugin URI: https://example.com/simple-site-password
  * Description: Protege un sitio WordPress con una contraseña global sencilla para visitantes.
- * Version: 0.1.4
+ * Version: 0.1.5
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: WPHubb
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SIMPLE_SITE_PASSWORD_VERSION', '0.1.4' );
+define( 'SIMPLE_SITE_PASSWORD_VERSION', '0.1.5' );
 define( 'SIMPLE_SITE_PASSWORD_FILE', __FILE__ );
 define( 'SIMPLE_SITE_PASSWORD_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SIMPLE_SITE_PASSWORD_URL', plugin_dir_url( __FILE__ ) );

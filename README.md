@@ -148,7 +148,7 @@ Este `README.md` está en español porque el proyecto también sirve como portfo
 Versión actual:
 
 ```text
-0.1.4
+0.1.5
 ```
 
 Pendiente antes de una versión 1.0:
