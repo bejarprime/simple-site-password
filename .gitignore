@@ -1,0 +1,41 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log
+debug.log
+
+# WordPress/runtime
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+
+# Dependencies/build output
+node_modules/
+vendor/
+dist/
+build/
+
+# Archives/backups
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+*.bak
+*.backup
+
+# Environment/secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
