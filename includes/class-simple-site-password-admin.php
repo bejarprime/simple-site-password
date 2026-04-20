@@ -88,6 +88,18 @@ class Simple_Site_Password_Admin {
 			SIMPLE_SITE_PASSWORD_VERSION,
 			true
 		);
+
+		wp_localize_script(
+			'simple-site-password-admin',
+			'simpleSitePasswordAdmin',
+			array(
+				'show'               => __( 'Show', 'simple-site-password' ),
+				'hide'               => __( 'Hide', 'simple-site-password' ),
+				'defaultTitle'       => __( 'Protected Site', 'simple-site-password' ),
+				'defaultDescription' => __( 'Enter the password to access this site.', 'simple-site-password' ),
+				'defaultButton'      => __( 'Access', 'simple-site-password' ),
+			)
+		);
 	}
 
 	/**

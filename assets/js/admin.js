@@ -19,6 +19,7 @@
 	}
 
 	ready( function () {
+		var i18n = window.simpleSitePasswordAdmin || {};
 		var changePasswordButton = document.querySelector( '[data-ssp-change-password]' );
 		var newPasswordWrap = document.querySelector( '[data-ssp-new-password-wrap]' );
 		var currentPassword = document.getElementById( 'ssp-current-password' );
@@ -44,7 +45,7 @@
 				var isPassword = passwordInput.getAttribute( 'type' ) === 'password';
 
 				passwordInput.setAttribute( 'type', isPassword ? 'text' : 'password' );
-				togglePasswordButton.textContent = isPassword ? 'Hide' : 'Show';
+				togglePasswordButton.textContent = isPassword ? ( i18n.hide || 'Hide' ) : ( i18n.show || 'Show' );
 			} );
 		}
 
@@ -67,9 +68,9 @@
 		}
 
 		function updateTextPreview() {
-			setText( previewTitle, titleInput ? titleInput.value : '', 'Protected Site' );
-			setText( previewDescription, descriptionInput ? descriptionInput.value : '', 'Enter the password to access this site.' );
-			setText( previewButton, buttonInput ? buttonInput.value : '', 'Access' );
+			setText( previewTitle, titleInput ? titleInput.value : '', i18n.defaultTitle || 'Protected Site' );
+			setText( previewDescription, descriptionInput ? descriptionInput.value : '', i18n.defaultDescription || 'Enter the password to access this site.' );
+			setText( previewButton, buttonInput ? buttonInput.value : '', i18n.defaultButton || 'Access' );
 		}
 
 		if ( templateSelect ) {

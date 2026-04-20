@@ -85,10 +85,13 @@ final class Simple_Site_Password {
 	 * @return void
 	 */
 	public function load_textdomain() {
+		$plugin_rel_path = dirname( SIMPLE_SITE_PASSWORD_BASENAME );
+		$languages_path  = '.' === $plugin_rel_path ? 'languages' : $plugin_rel_path . '/languages';
+
 		load_plugin_textdomain(
 			'simple-site-password',
 			false,
-			dirname( SIMPLE_SITE_PASSWORD_BASENAME ) . '/languages'
+			$languages_path
 		);
 	}
 }
