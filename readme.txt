@@ -4,7 +4,7 @@ Tags: password, privacy, private site, access, maintenance
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,9 @@ No. It is a simple global password gate for visitors.
 No. It is intended for simple access restriction, not for highly sensitive information.
 
 == Changelog ==
+
+= 0.1.3 =
+* Improve admin password UX, template preview, and form controls.
 
 = 0.1.2 =
 * Improve Minimal template styling.

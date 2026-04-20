@@ -209,6 +209,18 @@ body.simple-site-password-admin-page .wrap {
 	box-shadow: 0 12px 30px rgba(209, 254, 23, 0.32);
 }
 
+.wphubb-button-secondary {
+	border-color: rgba(209, 254, 23, 0.28);
+	background: transparent;
+	color: var(--wphubb-accent);
+}
+
+.wphubb-button-secondary:hover,
+.wphubb-button-secondary:focus {
+	background: var(--wphubb-accent-dim);
+	color: var(--wphubb-accent);
+}
+
 .wphubb-notice {
 	display: flex;
 	gap: 10px;
@@ -344,6 +356,44 @@ body.simple-site-password-admin-page .wrap {
 	max-width: 160px;
 }
 
+.wphubb-select option {
+	background: #111214;
+	color: #fff;
+}
+
+.wphubb-input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+.wphubb-input[type="number"]::-webkit-outer-spin-button,
+.wphubb-input[type="number"]::-webkit-inner-spin-button {
+	margin: 0;
+	-webkit-appearance: none;
+}
+
+.ssp-current-password,
+.ssp-password-input-wrap {
+	display: flex;
+	max-width: 560px;
+	gap: 10px;
+	align-items: center;
+}
+
+.ssp-current-password .wphubb-input,
+.ssp-password-input-wrap .wphubb-input {
+	flex: 1;
+	max-width: none;
+}
+
+.ssp-change-password,
+.ssp-toggle-password {
+	min-width: 92px;
+}
+
+.ssp-is-hidden {
+	display: none !important;
+}
+
 .ssp-submit {
 	margin: 16px 0 0;
 	padding: 0;
@@ -354,6 +404,50 @@ body.simple-site-password-admin-page .wrap {
 	border-radius: 14px;
 	background: rgba(13, 14, 16, 0.72);
 	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ssp-template-preview {
+	transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ssp-template-preview.ssp-preview-minimal {
+	background: #f3f4f6;
+	border-color: rgba(17, 24, 39, 0.10);
+}
+
+.ssp-template-preview.ssp-preview-minimal .ssp-preview-card {
+	background: #fff;
+	border-color: rgba(17, 24, 39, 0.10);
+}
+
+.ssp-template-preview.ssp-preview-minimal .wphubb-preview-title {
+	color: #111827;
+}
+
+.ssp-template-preview.ssp-preview-minimal .wphubb-preview-text {
+	color: #4b5563;
+}
+
+.ssp-template-preview.ssp-preview-minimal .ssp-preview-input {
+	background: #f9fafb;
+	color: rgba(17, 24, 39, 0.45);
+}
+
+.ssp-template-preview.ssp-preview-minimal .ssp-preview-button {
+	background: #111827;
+	color: #fff;
+}
+
+.ssp-template-preview.ssp-preview-dark {
+	background:
+		radial-gradient(circle at top left, rgba(209, 254, 23, 0.10), transparent 34%),
+		rgba(255, 255, 255, 0.035);
+}
+
+.ssp-template-preview.ssp-preview-gradient {
+	background:
+		radial-gradient(circle at 20% 10%, rgba(209, 254, 23, 0.28), transparent 28%),
+		linear-gradient(135deg, rgba(13, 14, 16, 0.96), rgba(38, 49, 18, 0.86));
 }
 
 .ssp-preview-form {

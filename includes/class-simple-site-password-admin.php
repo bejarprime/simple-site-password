@@ -80,6 +80,14 @@ class Simple_Site_Password_Admin {
 			array(),
 			SIMPLE_SITE_PASSWORD_VERSION
 		);
+
+		wp_enqueue_script(
+			'simple-site-password-admin',
+			SIMPLE_SITE_PASSWORD_URL . 'assets/js/admin.js',
+			array(),
+			SIMPLE_SITE_PASSWORD_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -186,10 +194,28 @@ class Simple_Site_Password_Admin {
 								<p><?php echo esc_html__( 'Set the password and access duration for visitors.', 'simple-site-password' ); ?></p>
 
 								<div class="wphubb-field">
-									<label for="ssp-password"><?php echo esc_html__( 'New password', 'simple-site-password' ); ?></label>
-									<input id="ssp-password" class="wphubb-input" type="password" name="password" value="" autocomplete="new-password" />
+									<label for="ssp-password"><?php echo esc_html__( 'Password', 'simple-site-password' ); ?></label>
+
+									<?php if ( $has_password ) : ?>
+										<div class="ssp-current-password" id="ssp-current-password">
+											<input class="wphubb-input" type="password" value="••••••••••••" disabled />
+											<button type="button" class="wphubb-button wphubb-button-secondary ssp-change-password" data-ssp-change-password>
+												<?php echo esc_html__( 'Change', 'simple-site-password' ); ?>
+											</button>
+										</div>
+									<?php endif; ?>
+
+									<div class="ssp-new-password <?php echo $has_password ? 'ssp-is-hidden' : ''; ?>" data-ssp-new-password-wrap>
+										<div class="ssp-password-input-wrap">
+											<input id="ssp-password" class="wphubb-input" type="password" name="password" value="" autocomplete="new-password" />
+											<button type="button" class="wphubb-button wphubb-button-secondary ssp-toggle-password" data-ssp-toggle-password aria-controls="ssp-password">
+												<?php echo esc_html__( 'Show', 'simple-site-password' ); ?>
+											</button>
+										</div>
+									</div>
+
 									<div class="wphubb-field-description">
-										<?php echo esc_html__( 'Leave empty to keep the current password. Passwords are stored hashed, never in plain text.', 'simple-site-password' ); ?>
+										<?php echo esc_html__( 'Passwords are stored hashed, never in plain text. Leave the new password empty to keep the current one.', 'simple-site-password' ); ?>
 									</div>
 								</div>
 
@@ -249,13 +275,13 @@ class Simple_Site_Password_Admin {
 									<input id="ssp-button-text" class="wphubb-input" type="text" name="button_text" value="<?php echo esc_attr( $options['button_text'] ); ?>" />
 								</div>
 
-								<div class="wphubb-preview ssp-template-preview ssp-preview-<?php echo esc_attr( $options['template'] ); ?>">
+								<div class="wphubb-preview ssp-template-preview ssp-preview-<?php echo esc_attr( $options['template'] ); ?>" data-ssp-preview>
 									<div class="ssp-preview-card">
-										<h3 class="wphubb-preview-title"><?php echo esc_html( $options['title'] ); ?></h3>
-										<p class="wphubb-preview-text"><?php echo esc_html( $options['description'] ); ?></p>
+										<h3 class="wphubb-preview-title" data-ssp-preview-title><?php echo esc_html( $options['title'] ); ?></h3>
+										<p class="wphubb-preview-text" data-ssp-preview-description><?php echo esc_html( $options['description'] ); ?></p>
 										<div class="ssp-preview-form">
 											<span class="ssp-preview-input"><?php echo esc_html__( 'Password', 'simple-site-password' ); ?></span>
-											<span class="ssp-preview-button"><?php echo esc_html( $options['button_text'] ); ?></span>
+											<span class="ssp-preview-button" data-ssp-preview-button><?php echo esc_html( $options['button_text'] ); ?></span>
 										</div>
 									</div>
 								</div>
