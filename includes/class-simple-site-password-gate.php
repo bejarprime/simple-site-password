@@ -257,23 +257,35 @@ class Simple_Site_Password_Gate {
 	 * @return void
 	 */
 	private function set_cookie( $name, $value, $expires ) {
-		$path     = defined( 'COOKIEPATH' ) && COOKIEPATH ? COOKIEPATH : '/';
+		$paths = array( '/' );
+
+		if ( defined( 'COOKIEPATH' ) && COOKIEPATH ) {
+			$paths[] = COOKIEPATH;
+		}
+
+		if ( defined( 'SITECOOKIEPATH' ) && SITECOOKIEPATH ) {
+			$paths[] = SITECOOKIEPATH;
+		}
+
+		$paths    = array_values( array_unique( array_filter( $paths ) ) );
 		$domain   = defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '';
 		$secure   = is_ssl();
 		$httponly = true;
 
-		setcookie(
-			$name,
-			$value,
-			array(
-				'expires'  => $expires,
-				'path'     => $path,
-				'domain'   => $domain,
-				'secure'   => $secure,
-				'httponly' => $httponly,
-				'samesite' => 'Lax',
-			)
-		);
+		foreach ( $paths as $path ) {
+			setcookie(
+				$name,
+				$value,
+				array(
+					'expires'  => $expires,
+					'path'     => $path,
+					'domain'   => $domain,
+					'secure'   => $secure,
+					'httponly' => $httponly,
+					'samesite' => 'Lax',
+				)
+			);
+		}
 	}
 
 	/**
@@ -318,8 +330,24 @@ class Simple_Site_Password_Gate {
 	 * @return void
 	 */
 	private function render_gate( array $options ) {
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+
+		if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
+			define( 'DONOTCACHEOBJECT', true );
+		}
+
+		if ( ! defined( 'DONOTCACHEDB' ) ) {
+			define( 'DONOTCACHEDB', true );
+		}
+
 		status_header( 200 );
 		nocache_headers();
+		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private' );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+		header( 'Vary: Cookie' );
 
 		$template = isset( $options['template'] ) ? sanitize_html_class( $options['template'] ) : 'minimal';
 		$title    = isset( $options['title'] ) ? $options['title'] : __( 'Protected Site', 'simple-site-password' );
