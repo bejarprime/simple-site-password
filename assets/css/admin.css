@@ -4,22 +4,24 @@
  * Uses the shared WPHubb design system.
  */
 
-.settings_page_simple-site-password #wpcontent,
-.settings_page_simple-site-password #wpbody,
-.settings_page_simple-site-password #wpbody-content {
+body.simple-site-password-admin-page,
+body.simple-site-password-admin-page #wpwrap,
+body.simple-site-password-admin-page #wpcontent,
+body.simple-site-password-admin-page #wpbody,
+body.simple-site-password-admin-page #wpbody-content {
 	background: #0d0e10;
 }
 
-.settings_page_simple-site-password #wpbody-content {
+body.simple-site-password-admin-page #wpbody-content {
 	min-height: calc(100vh - 32px);
 	padding-bottom: 0;
 }
 
-.settings_page_simple-site-password #wpfooter {
+body.simple-site-password-admin-page #wpfooter {
 	display: none;
 }
 
-.settings_page_simple-site-password .wrap {
+body.simple-site-password-admin-page .wrap {
 	margin: 0;
 }
 

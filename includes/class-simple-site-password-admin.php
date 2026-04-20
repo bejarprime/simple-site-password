@@ -45,6 +45,7 @@ class Simple_Site_Password_Admin {
 	public function register_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_filter( 'admin_body_class', array( $this, 'add_admin_body_class' ) );
 	}
 
 	/**
@@ -79,6 +80,22 @@ class Simple_Site_Password_Admin {
 			array(),
 			SIMPLE_SITE_PASSWORD_VERSION
 		);
+	}
+
+	/**
+	 * Add a page-specific body class for scoped admin styling.
+	 *
+	 * @param string $classes Current body classes.
+	 * @return string
+	 */
+	public function add_admin_body_class( $classes ) {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+		if ( $screen && 'settings_page_simple-site-password' === $screen->id ) {
+			$classes .= ' simple-site-password-admin-page';
+		}
+
+		return $classes;
 	}
 
 	/**
