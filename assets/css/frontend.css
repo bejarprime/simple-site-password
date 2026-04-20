@@ -144,7 +144,7 @@ body.ssp-gate .ssp-gate-button:focus {
 	filter: brightness(0.96);
 }
 
-.ssp-template-minimal {
+body.ssp-gate.ssp-template-minimal {
 	--ssp-accent: #111827;
 	--ssp-dark: #f3f4f6;
 	--ssp-surface: #ffffff;
@@ -152,11 +152,24 @@ body.ssp-gate .ssp-gate-button:focus {
 	--ssp-text-soft: rgba(17, 24, 39, 0.72);
 	--ssp-muted: #4b5563;
 	--ssp-border: rgba(17, 24, 39, 0.10);
+	background:
+		radial-gradient(circle at top left, rgba(17, 24, 39, 0.06), transparent 32%),
+		#f3f4f6;
 }
 
 body.ssp-gate.ssp-template-minimal .ssp-gate-card {
 	background: #ffffff;
 	box-shadow: 0 24px 80px rgba(17, 24, 39, 0.12);
+}
+
+body.ssp-gate.ssp-template-minimal .ssp-gate-brand {
+	color: #4b5563;
+}
+
+body.ssp-gate.ssp-template-minimal .ssp-gate-button {
+	background: #111827 !important;
+	color: #ffffff !important;
+	box-shadow: 0 12px 30px rgba(17, 24, 39, 0.18) !important;
 }
 
 body.ssp-gate.ssp-template-minimal .ssp-gate-input {
