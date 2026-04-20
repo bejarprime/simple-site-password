@@ -20,6 +20,16 @@ class Simple_Site_Password_Gate {
 	const ACTION_NAME = 'simple_site_password_unlock';
 
 	/**
+	 * Cookie name.
+	 */
+	const COOKIE_NAME = 'simple_site_password_access';
+
+	/**
+	 * Logout query argument.
+	 */
+	const LOGOUT_QUERY_ARG = 'simple_site_password_logout';
+
+	/**
 	 * Request error flag.
 	 *
 	 * @var string
@@ -62,6 +72,12 @@ class Simple_Site_Password_Gate {
 		}
 
 		$options = $this->options->get();
+
+		if ( $this->is_logout_request() ) {
+			$this->clear_access_cookie();
+			wp_safe_redirect( home_url( '/' ) );
+			exit;
+		}
 
 		if ( empty( $options['enabled'] ) || ! $this->options->has_password() ) {
 			return;
@@ -121,12 +137,37 @@ class Simple_Site_Password_Gate {
 	/**
 	 * Check whether the visitor already has access.
 	 *
-	 * Cookie support will be implemented in the next phase.
-	 *
 	 * @return bool
 	 */
 	private function has_valid_access() {
-		return false;
+		if ( empty( $_COOKIE[ self::COOKIE_NAME ] ) ) {
+			return false;
+		}
+
+		$cookie = sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) );
+		$parts  = explode( '|', $cookie );
+
+		if ( 3 !== count( $parts ) ) {
+			return false;
+		}
+
+		list( $expires, $password_fingerprint, $signature ) = $parts;
+
+		$expires = absint( $expires );
+
+		if ( $expires < time() ) {
+			return false;
+		}
+
+		$options = $this->options->get();
+
+		if ( empty( $options['password_hash'] ) || ! hash_equals( $this->get_password_fingerprint( $options['password_hash'] ), $password_fingerprint ) ) {
+			return false;
+		}
+
+		$expected = $this->create_cookie_signature( $expires, $password_fingerprint );
+
+		return hash_equals( $expected, $signature );
 	}
 
 	/**
@@ -165,11 +206,109 @@ class Simple_Site_Password_Gate {
 			return;
 		}
 
-		/**
-		 * Cookie creation is part of the next phase.
-		 * For now, successful validation allows the current request only.
-		 */
-		return;
+		$this->set_access_cookie( $options );
+
+		wp_safe_redirect( $this->get_current_url() );
+		exit;
+	}
+
+	/**
+	 * Check if current request should clear the access cookie.
+	 *
+	 * @return bool
+	 */
+	private function is_logout_request() {
+		return isset( $_GET[ self::LOGOUT_QUERY_ARG ] ) && '1' === sanitize_text_field( wp_unslash( $_GET[ self::LOGOUT_QUERY_ARG ] ) );
+	}
+
+	/**
+	 * Set signed access cookie.
+	 *
+	 * @param array $options Plugin options.
+	 * @return void
+	 */
+	private function set_access_cookie( array $options ) {
+		$duration_hours       = isset( $options['cookie_duration'] ) ? absint( $options['cookie_duration'] ) : 24;
+		$expires              = time() + ( max( 1, $duration_hours ) * HOUR_IN_SECONDS );
+		$password_fingerprint = $this->get_password_fingerprint( $options['password_hash'] );
+		$signature            = $this->create_cookie_signature( $expires, $password_fingerprint );
+		$value                = $expires . '|' . $password_fingerprint . '|' . $signature;
+
+		$this->set_cookie( self::COOKIE_NAME, $value, $expires );
+		$_COOKIE[ self::COOKIE_NAME ] = $value;
+	}
+
+	/**
+	 * Clear access cookie.
+	 *
+	 * @return void
+	 */
+	private function clear_access_cookie() {
+		$this->set_cookie( self::COOKIE_NAME, '', time() - HOUR_IN_SECONDS );
+		unset( $_COOKIE[ self::COOKIE_NAME ] );
+	}
+
+	/**
+	 * Set cookie with secure defaults.
+	 *
+	 * @param string $name Cookie name.
+	 * @param string $value Cookie value.
+	 * @param int    $expires Expiration timestamp.
+	 * @return void
+	 */
+	private function set_cookie( $name, $value, $expires ) {
+		$path     = defined( 'COOKIEPATH' ) && COOKIEPATH ? COOKIEPATH : '/';
+		$domain   = defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '';
+		$secure   = is_ssl();
+		$httponly = true;
+
+		setcookie(
+			$name,
+			$value,
+			array(
+				'expires'  => $expires,
+				'path'     => $path,
+				'domain'   => $domain,
+				'secure'   => $secure,
+				'httponly' => $httponly,
+				'samesite' => 'Lax',
+			)
+		);
+	}
+
+	/**
+	 * Create password fingerprint to invalidate cookies when password changes.
+	 *
+	 * @param string $password_hash Stored password hash.
+	 * @return string
+	 */
+	private function get_password_fingerprint( $password_hash ) {
+		return hash_hmac( 'sha256', $password_hash, wp_salt( 'auth' ) );
+	}
+
+	/**
+	 * Create cookie signature.
+	 *
+	 * @param int    $expires Expiration timestamp.
+	 * @param string $password_fingerprint Password fingerprint.
+	 * @return string
+	 */
+	private function create_cookie_signature( $expires, $password_fingerprint ) {
+		return hash_hmac( 'sha256', $expires . '|' . $password_fingerprint, wp_salt( 'secure_auth' ) );
+	}
+
+	/**
+	 * Get current URL without unlock POST data.
+	 *
+	 * @return string
+	 */
+	private function get_current_url() {
+		$host        = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : wp_parse_url( home_url(), PHP_URL_HOST );
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+		$scheme      = is_ssl() ? 'https' : 'http';
+		$url         = $scheme . '://' . $host . $request_uri;
+
+		return remove_query_arg( self::LOGOUT_QUERY_ARG, $url );
 	}
 
 	/**
